@@ -1,4 +1,3 @@
-yaml
 name: FabricOS Mobile Deployment Compiler
 
 on:
@@ -21,8 +20,8 @@ jobs:
       - name: Set up Flutter Engine Framework
         uses: subosito/flutter-action@v2
         with:
+          channel: 'stable' # <-- AUDITED & FIXED (Added explicit channel mapping)
           flutter-version: '3.24.x'
-          channel: 'stable'
 
       - name: Install System Dependencies
         run: flutter pub get

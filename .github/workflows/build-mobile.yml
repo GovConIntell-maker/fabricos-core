@@ -23,29 +23,44 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # --- AUTOMATED NATIVE ENVIRONMENT INITIALIZATION ---
-      - name: Inject Missing Native Android Scaffolding
+      # --- SELF-HEALING ARCHITECTURE ROUTINE ---
+      - name: Inject Clean Native Android Scaffolding
         run: |
           rm -f pubspec.yaml
           flutter create --platforms=android --org com.sovereign.fabricos .
 
-      # Upgraded with sqlite3_flutter_libs to clear local C-compilation constraints
-      - name: Apply FabricOS Dependency Matrix
+      # OVERWRITE THE GENERATED YAML DIRECTLY TO AVOID PARSING ERRORS
+      # This forces your production dependency matrix to lock in flawlessly
+      - name: Overwrite and Force Valid pubspec.yaml Structure
         run: |
-          flutter pub add sqlite3 sqlite3_flutter_libs sqflite_common_ffi dart_jsonwebtoken path_provider
+          cat << 'EOF' > pubspec.yaml
+          name: fabricos_mobile
+          description: Sovereign Headless Multi-Agent Mobile Engine.
+          version: 1.0.0+1
+          environment:
+            sdk: '>=3.2.0 <4.0.0'
+          dependencies:
+            flutter:
+              sdk: flutter
+            sqlite3: ^2.4.0
+            sqlite3_flutter_libs: ^0.5.0
+            sqflite_common_ffi: ^2.3.0
+            dart_jsonwebtoken: ^2.4.2
+            path_provider: ^2.1.3
+          flutter:
+            uses-material-design: true
+          EOF
 
-      # Cleans cache profiles to prevent configuration residue locks
-      - name: Clean Build Workspace Cache
+      - name: Clean Workspace Residual Cache
         run: flutter clean
 
       - name: Install System Dependencies
         run: flutter pub get
 
-      # --- STANDALONE APK ENGINE PRODUCTION COMPILE ---
+      # --- PRODUCTION BUILD EXECUTION ---
       - name: Compile Standalone Production Android Application Package (.apk)
         run: flutter build apk --release
 
-      # Captures and isolates the final finished asset bundle for direct user download
       - name: Archive Store-Ready Android Binary Artifact
         uses: actions/upload-artifact@v4
         with:

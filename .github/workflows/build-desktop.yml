@@ -14,12 +14,13 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5 # <-- UPGRADED to clear the Node 20 warning
 
       - name: Set up Python Environment
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5 # <-- Maintained standard stable runner block
         with:
-          python-version: '3.11' # <-- AUDITED & FIXED (Changed from python-month)
+          python-version: '3.11'
+          update-environment: true
 
       - name: Install Packaging Dependencies
         run: |
@@ -35,7 +36,7 @@ jobs:
         run: pyinstaller --noconsole --onefile companion.py
 
       - name: Archive Compiled Desktop Binary Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5 # <-- UPGRADED to clear the Node 20 warning
         with:
           name: fabricos-desktop-${{ matrix.os }}
           path: dist/*

@@ -23,12 +23,13 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # --- FIXED: Added explicit project name flag using valid underscores ---
+      # --- SELF-HEALING ARCHITECTURE ROUTINE ---
       - name: Inject Clean Native Android Scaffolding
         run: |
           rm -f pubspec.yaml
           flutter create --platforms=android --project-name=fabricos_core --org com.sovereign.fabricos .
 
+      # Overwrites the generated file directly to eliminate local parsing variables
       - name: Overwrite and Force Valid pubspec.yaml Structure
         run: |
           cat << 'EOF' > pubspec.yaml
@@ -59,8 +60,9 @@ jobs:
       - name: Compile Standalone Production Android Application Package (.apk)
         run: flutter build apk --release
 
+      # --- UPGRADED TO VERSION 5: CLEARS DEPRECATION WARNINGS ---
       - name: Archive Store-Ready Android Binary Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: fabricos-android-apk-package
           path: build/app/outputs/flutter-apk/app-release.apk

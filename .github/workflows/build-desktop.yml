@@ -1,0 +1,42 @@
+yaml
+name: FabricOS Desktop Deployment Compiler
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  compile-desktop:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Packaging Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller pyperclip pyjwt
+
+      - name: Run PyInstaller Windows Package Compilation
+        if: matrix.os == 'windows-latest'
+        run: pyinstaller --noconsole --onefile companion.py
+
+      - name: Run PyInstaller macOS Package Compilation
+        if: matrix.os == 'macos-latest'
+        run: pyinstaller --noconsole --onefile companion.py
+
+      - name: Archive Compiled Desktop Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabricos-desktop-${{ matrix.os }}
+          path: dist/*

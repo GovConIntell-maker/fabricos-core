@@ -20,8 +20,19 @@ jobs:
       - name: Set up Modern Flutter Engine Framework
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable' # Uses the latest production-stable engine natively
-          cache: true       # Activates build caching to drop compilation times
+          channel: 'stable'
+          cache: true
+
+      # --- SELF-HEALING SCAFFOLDING GENERATION ---
+      - name: Inject Missing Native Android Scaffolding
+        run: |
+          rm -f pubspec.yaml
+          flutter create --platforms=android --org com.sovereign.fabricos .
+
+      # Re-inject our custom production dependencies
+      - name: Apply FabricOS Dependency Matrix
+        run: |
+          flutter pub add sqlite3 sqflite_common_ffi dart_jsonwebtoken path_provider
 
       - name: Install System Dependencies
         run: flutter pub get

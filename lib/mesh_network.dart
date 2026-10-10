@@ -1,4 +1,3 @@
-dart
 import 'dart:io';
 import 'dart:convert';
 import 'coordinator.dart';

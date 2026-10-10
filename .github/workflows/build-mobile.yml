@@ -23,13 +23,12 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # --- SELF-HEALING SCAFFOLDING GENERATION ---
+      # --- AUTOMATED NATIVE PROJECTS ASSEMBLY ---
       - name: Inject Missing Native Android Scaffolding
         run: |
           rm -f pubspec.yaml
           flutter create --platforms=android --org com.sovereign.fabricos .
 
-      # Re-inject our custom production dependencies
       - name: Apply FabricOS Dependency Matrix
         run: |
           flutter pub add sqlite3 sqflite_common_ffi dart_jsonwebtoken path_provider
@@ -37,11 +36,12 @@ jobs:
       - name: Install System Dependencies
         run: flutter pub get
 
-      - name: Compile Production Android App Bundle (.aab)
-        run: flutter build appbundle --release
+      # --- CHANGED TO DIRECT APK UNNOTARIZED COMPILE ---
+      - name: Compile Standalone Production Android Application Package (.apk)
+        run: flutter build apk --release
 
       - name: Archive Store-Ready Android Binary Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fabricos-android-deployment-bundle
-          path: build/app/outputs/bundle/release/app-release.aab
+          name: fabricos-android-apk-package
+          path: build/app/outputs/flutter-apk/app-release.apk

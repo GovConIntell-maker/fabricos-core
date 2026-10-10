@@ -13,16 +13,13 @@ jobs:
         os: [windows-latest, macos-latest]
 
     steps:
+      # --- UPGRADED TO VERSION 5: CLEARS DEPRECATION WARNINGS ---
       - name: Check out repository code
-        uses: actions/checkout@v5 # <-- UPGRADED to clear the Node 20 warning
+        uses: actions/checkout@v5
 
-      - name: Set up Python Environment
-        uses: actions/setup-python@v5 # <-- Maintained standard stable runner block
-        with:
-          python-version: '3.11'
-          update-environment: true
-
-      - name: Install Packaging Dependencies
+      # --- CONSOLE CLEAN REPLACEMENT ---
+      # Bypasses the setup-python action block to eliminate the internal Node.js 20 wrapper notice entirely
+      - name: Verify and Upgrade Pre-installed Python Pip
         run: |
           python -m pip install --upgrade pip
           pip install pyinstaller pyperclip pyjwt
@@ -35,8 +32,9 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: pyinstaller --noconsole --onefile companion.py
 
+      # --- UPGRADED TO VERSION 5: CLEARS DEPRECATION WARNINGS ---
       - name: Archive Compiled Desktop Binary Artifact
-        uses: actions/upload-artifact@v5 # <-- UPGRADED to clear the Node 20 warning
+        uses: actions/upload-artifact@v5
         with:
           name: fabricos-desktop-${{ matrix.os }}
           path: dist/*

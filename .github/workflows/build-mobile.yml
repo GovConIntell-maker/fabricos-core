@@ -1,1 +1,38 @@
 
+yaml
+name: FabricOS Mobile Deployment Compiler
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Java Development Kit (JDK)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter Engine Framework
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+
+      - name: Install System Dependencies
+        run: flutter pub get
+
+      - name: Compile Production Android App Bundle (.aab)
+        run: flutter build appbundle --release
+
+      - name: Archive Store-Ready Android Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fabricos-android-deployment-bundle
+          path: build/app/outputs/bundle/release/app-release.aab

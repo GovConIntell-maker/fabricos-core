@@ -1,4 +1,3 @@
-dart
 import 'package:flutter/material.dart';
 import 'mesh_network.dart';
 import 'stt_service.dart';

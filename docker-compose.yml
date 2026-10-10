@@ -1,0 +1,17 @@
+yaml
+version: '3.8'
+services:
+  metadata_db:
+    image: ankane/pgvector:latest
+    container_name: fabricos_postgres_registry
+    environment:
+      POSTGRES_DB: agent_memory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: local_pass
+    ports:
+      - "5432:5432"
+  scout_template:
+    build:
+      context: .
+      dockerfile: scout-node.Dockerfile
+    image: scout-node:latest

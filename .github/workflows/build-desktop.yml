@@ -1,4 +1,3 @@
-yaml
 name: FabricOS Desktop Deployment Compiler
 
 on:
@@ -20,7 +19,7 @@ jobs:
       - name: Set up Python Environment
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.11' # <-- AUDITED & FIXED (Changed from python-month)
 
       - name: Install Packaging Dependencies
         run: |

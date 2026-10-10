@@ -1,4 +1,3 @@
-dart
 import 'dart:async';
 
 class MobileSTTEngine {

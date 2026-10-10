@@ -1,5 +1,7 @@
+// lib/mesh_network.dart
 import 'dart:io';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'coordinator.dart';
 
 class MobileMeshGateway {
@@ -9,9 +11,11 @@ class MobileMeshGateway {
   Future<void> bootMeshGateway() async {
     _server = await ServerSocket.bind(InternetAddress.anyIPv4, 8990);
     _server!.listen((Socket client) {
-      client.transform(utf8.decoder).listen((String data) async {
+      // Decode data streams by parsing incoming bytes directly into strings
+      client.listen((Uint8List rawBytes) async {
         try {
-          final Map<String, dynamic> jsonPayload = jsonDecode(data);
+          String decodedString = utf8.decode(rawBytes);
+          final Map<String, dynamic> jsonPayload = jsonDecode(decodedString);
           String text = jsonPayload['data'] ?? "";
           String responseContext = await _coordinator.orchestratePipeline(text);
           client.write(jsonEncode({'status': 'SUCCESS', 'context': responseContext}));

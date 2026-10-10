@@ -23,14 +23,12 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # --- SELF-HEALING ARCHITECTURE ROUTINE ---
+      # --- FIXED: Added explicit project name flag using valid underscores ---
       - name: Inject Clean Native Android Scaffolding
         run: |
           rm -f pubspec.yaml
-          flutter create --platforms=android --org com.sovereign.fabricos .
+          flutter create --platforms=android --project-name=fabricos_core --org com.sovereign.fabricos .
 
-      # OVERWRITE THE GENERATED YAML DIRECTLY TO AVOID PARSING ERRORS
-      # This forces your production dependency matrix to lock in flawlessly
       - name: Overwrite and Force Valid pubspec.yaml Structure
         run: |
           cat << 'EOF' > pubspec.yaml

@@ -6,13 +6,13 @@ on:
 
 jobs:
   build-android:
-    runs-on: ubuntu-24.04 # <-- FIXED: Pins stable environment to prevent deprecation blocks
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5 # <-- FIXED: Upgraded to Node 24 baseline
+        uses: actions/checkout@v5
 
       - name: Set up Java Development Kit (JDK)
-        uses: actions/setup-java@v5 # <-- FIXED: Upgraded to version 5 package standard
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -23,23 +23,29 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # --- AUTOMATED NATIVE PROJECTS ASSEMBLY ---
+      # --- AUTOMATED NATIVE ENVIRONMENT INITIALIZATION ---
       - name: Inject Missing Native Android Scaffolding
         run: |
           rm -f pubspec.yaml
           flutter create --platforms=android --org com.sovereign.fabricos .
 
+      # Upgraded with sqlite3_flutter_libs to clear local C-compilation constraints
       - name: Apply FabricOS Dependency Matrix
         run: |
-          flutter pub add sqlite3 sqflite_common_ffi dart_jsonwebtoken path_provider
+          flutter pub add sqlite3 sqlite3_flutter_libs sqflite_common_ffi dart_jsonwebtoken path_provider
+
+      # Cleans cache profiles to prevent configuration residue locks
+      - name: Clean Build Workspace Cache
+        run: flutter clean
 
       - name: Install System Dependencies
         run: flutter pub get
 
-      # --- DIRECT STANDALONE COMPILE ---
+      # --- STANDALONE APK ENGINE PRODUCTION COMPILE ---
       - name: Compile Standalone Production Android Application Package (.apk)
         run: flutter build apk --release
 
+      # Captures and isolates the final finished asset bundle for direct user download
       - name: Archive Store-Ready Android Binary Artifact
         uses: actions/upload-artifact@v4
         with:

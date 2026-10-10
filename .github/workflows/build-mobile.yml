@@ -60,7 +60,7 @@ jobs:
       - name: Compile Standalone Production Android Application Package (.apk)
         run: flutter build apk --release
 
-      # --- UPGRADED TO VERSION 6+: RUNS NATIVELY ON NODE 24 ---
+      # --- UPGRADED TO VERSION 6: RUNS NATIVELY ON NODE 24 ---
       - name: Archive Store-Ready Android Binary Artifact
         uses: actions/upload-artifact@v6
         with:

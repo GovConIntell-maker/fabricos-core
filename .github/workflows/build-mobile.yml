@@ -6,13 +6,13 @@ on:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # <-- FIXED: Pins stable environment to prevent deprecation blocks
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5 # <-- FIXED: Upgraded to Node 24 baseline
 
       - name: Set up Java Development Kit (JDK)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5 # <-- FIXED: Upgraded to version 5 package standard
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -36,7 +36,7 @@ jobs:
       - name: Install System Dependencies
         run: flutter pub get
 
-      # --- CHANGED TO DIRECT APK UNNOTARIZED COMPILE ---
+      # --- DIRECT STANDALONE COMPILE ---
       - name: Compile Standalone Production Android Application Package (.apk)
         run: flutter build apk --release
 

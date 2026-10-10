@@ -17,11 +17,11 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Set up Flutter Engine Framework
+      - name: Set up Modern Flutter Engine Framework
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable' # <-- AUDITED & FIXED (Added explicit channel mapping)
-          flutter-version: '3.24.x'
+          channel: 'stable' # Uses the latest production-stable engine natively
+          cache: true       # Activates build caching to drop compilation times
 
       - name: Install System Dependencies
         run: flutter pub get
